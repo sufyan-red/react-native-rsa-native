@@ -157,10 +157,25 @@ public class RSA {
         return data;
     }
 
+    private byte[] decryptWithPublicKey(byte[] cipherBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
+        String message = null;
+        final Cipher cipher = Cipher.getInstance("RSA/NONE/PKCS1Padding");
+        cipher.init(Cipher.DECRYPT_MODE, this.publicKey);
+        byte[] data = cipher.doFinal(cipherBytes);
+        return data;
+    }
+
     // UTF-8 input
     public String decrypt(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
         byte[] cipherBytes = Base64.decode(message, Base64.DEFAULT);
         byte[] data = decrypt(cipherBytes);
+        return new String(data, CharsetUTF_8);
+    }
+
+    // UTF-8 input
+    public String decryptForPublicKey(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
+        byte[] cipherBytes = Base64.decode(message, Base64.DEFAULT);
+        byte[] data = decryptWithPublicKey(cipherBytes);
         return new String(data, CharsetUTF_8);
     }
 
